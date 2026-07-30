@@ -3,7 +3,9 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
-from .database import Base, engine
+from .database import Base, engine, SessionLocal
+from .models import AdminUser
+from .auth import hash_password
 from .routers import public, admin
 
 app = FastAPI(title="CyberPy Labs")
@@ -21,6 +23,19 @@ app.include_router(admin.router)
 
 @app.on_event("startup")
 def on_startup():
-    # Safety net: ensures tables exist even if `python -m app.seed` wasn't run yet.
-    # The admin user itself still needs to be created via `python -m app.seed`.
     Base.metadata.create_all(bind=engine)
+
+    # Optional non-interactive admin creation, for hosts with no shell access
+    # (e.g. Render's free tier). Set ADMIN_USERNAME + ADMIN_PASSWORD as env
+    # vars and an admin account is created automatically on first boot if
+    # none exists yet. Locally, prefer `python -m app.seed` instead.
+    username = os.environ.get("ADMIN_USERNAME")
+    password = os.environ.get("ADMIN_PASSWORD")
+    if username and password:
+        db = SessionLocal()
+        try:
+            if db.query(AdminUser).count() == 0:
+                db.add(AdminUser(username=username, password_hash=hash_password(password)))
+                db.commit()
+        finally:
+            db.close()

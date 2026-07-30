@@ -57,7 +57,45 @@ Categories live in one place: the `CATEGORIES` list in `app/models.py`.
 Add or rename entries there and they'll automatically show up in the nav
 cards, blog filter pills, and the admin post form's category dropdown.
 
-## Before deploying
+## Fastest way to see it live: Render (free, no local setup)
+
+If you just want a public URL to click around and test — skipping your
+local Python/venv setup entirely — Render's free tier works well for this.
+
+1. **Push this project to a GitHub repo** (public or private — Render
+   supports both once you connect your account).
+2. Go to [render.com](https://render.com) and sign up (no credit card
+   needed for the free tier).
+3. **New +** → **Web Service** → connect the GitHub repo.
+4. Configure:
+   - **Build command:** `pip install -r requirements.txt`
+   - **Start command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - **Instance type:** Free
+5. Under **Environment**, add these variables:
+   | Key | Value |
+   |---|---|
+   | `SESSION_SECRET` | any long random string |
+   | `ADMIN_USERNAME` | your chosen admin username |
+   | `ADMIN_PASSWORD` | your chosen admin password |
+
+   (`ADMIN_USERNAME`/`ADMIN_PASSWORD` are read once on first boot to create
+   your admin login automatically — there's no shell access on the free
+   tier to run `python -m app.seed` interactively.)
+6. Click **Deploy**. You'll get a live `https://your-app.onrender.com` URL
+   in a few minutes.
+
+**Two free-tier things worth knowing:**
+- The service **spins down after 15 minutes of inactivity** and takes
+  ~30–60 seconds to wake back up on the next request — normal for
+  testing, not something you'd want for a real audience.
+- The filesystem is **ephemeral**: any posts/comments you add through
+  the SQLite database are wiped whenever the service restarts, redeploys,
+  or spins down from inactivity. Fine for a quick look at the UI; if you
+  want data to actually stick around while testing, add a free Render
+  Postgres instance and set the `DATABASE_URL` env var it gives you —
+  the app already reads that automatically, no code changes needed.
+
+## Before deploying (for real, longer-term use)
 
 1. **Set a real session secret.** Set the `SESSION_SECRET` environment
    variable to a long random string (the code falls back to an insecure
