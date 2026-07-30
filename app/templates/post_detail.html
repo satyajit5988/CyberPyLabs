@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} | CyberPy Labs{% endblock %}
+{% block description %}{{ post.excerpt or post.title }}{% endblock %}
+{% block content %}
+
+<section>
+  <div class="post-header">
+    <div class="meta">{{ category_labels.get(post.category, post.category) }} • {{ post.created_at.strftime('%B %d, %Y') }}</div>
+    <h1>{{ post.title }}</h1>
+  </div>
+
+  <div class="post-content">
+    {{ post.content_html | safe }}
+  </div>
+
+  <div class="comments-section">
+    <h3>Comments ({{ post.comments|length }})</h3>
+
+    {% if comment_error %}<div class="alert alert-error">{{ comment_error }}</div>{% endif %}
+    {% if comment_success %}<div class="alert alert-success">Comment posted!</div>{% endif %}
+
+    {% if post.comments %}
+      {% for c in post.comments %}
+      <div class="comment">
+        <span class="author">{{ c.author_name }}</span>
+        <span class="date">{{ c.created_at.strftime('%b %d, %Y %H:%M') }}</span>
+        <p>{{ c.body }}</p>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-comments">Be the first to comment.</p>
+    {% endif %}
+
+    <form class="form-card" method="post" action="/post/{{ post.slug }}/comments" style="margin-top:24px;">
+      <div class="form-group">
+        <label for="author_name">Name</label>
+        <input type="text" id="author_name" name="author_name" maxlength="80" required>
+      </div>
+      <div class="form-group">
+        <label for="body">Comment</label>
+        <textarea id="body" name="body" maxlength="2000" required></textarea>
+      </div>
+      <button type="submit" class="btn">Post Comment</button>
+    </form>
+  </div>
+</section>
+
+{% endblock %}

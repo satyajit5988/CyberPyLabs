@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-text">
+    <br/><br/>
+    <h1>Master <span>Python</span>, Cybersecurity & Cloud</h1>
+    <p>
+      Learn through practical labs, real-world projects, interview preparation,
+      Docker, Kubernetes, Networking, DevSecOps and Automation.
+    </p>
+    <a href="/blog" class="btn">Start Learning</a>
+    {% if not admin %}<a href="/admin/login" class="btn2">Register / Login</a>{% endif %}
+  </div>
+
+  <div class="hero-image">
+    <div class="tech-badge b1">🐍 Python</div>
+    <div class="tech-badge b2">🐳 Docker</div>
+    <div class="tech-badge b3">🔐 CyberSecurity</div>
+    <div class="tech-badge b4">☸ Kubernetes</div>
+    <div class="tech-badge b5">☁️ Cloud</div>
+    <div class="tech-badge b6">🌐 Networking</div>
+    <div class="tech-badge b7">⚡ Automation</div>
+    <div class="tech-badge b8">🐧 Linux</div>
+    🛡️
+  </div>
+</section>
+
+<section class="why-section">
+  <h2 class="title">Why CyberPy Labs?</h2>
+  <p class="subtitle" style="max-width:760px;margin-left:auto;margin-right:auto;">
+    CyberPy Labs is built for learners who want more than just theory. Every learning track
+    simplifies complex concepts through structured explanations, practical examples, and
+    real-world applications — from Python to Cybersecurity, Networking, Docker, and Kubernetes.
+  </p>
+
+  <div class="stats">
+    <div class="stat"><h2>Structured</h2><p>Learn topics in a logical sequence that gradually builds your understanding from beginner to advanced.</p></div>
+    <div class="stat"><h2>Practical</h2><p>Every topic is explained using realistic coding examples instead of abstract theory.</p></div>
+    <div class="stat"><h2>Technologies</h2><p>Explore Python, Cybersecurity, Networking, Docker, Kubernetes, DevOps, and AI in one place.</p></div>
+    <div class="stat"><h2>Interview</h2><p>Prepare for technical interviews with curated questions, explanations, and coding exercises.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="title">Explore Topics</h2>
+  <div class="cards">
+    {% for slug, label in categories %}
+    <a class="card" href="/blog?category={{ slug }}">
+      <h3>{{ label }}</h3>
+      <p>{{ category_descriptions.get(slug, '') }}</p>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if latest_posts %}
+<section>
+  <h2 class="title">Latest Posts</h2>
+  <div class="post-list">
+    {% for post in latest_posts %}
+    <a class="post-row" href="/post/{{ post.slug }}">
+      <div class="meta">{{ category_labels.get(post.category, post.category) }}</div>
+      <h3>{{ post.title }}</h3>
+      <p>{{ post.excerpt or '' }}</p>
+    </a>
+    {% endfor %}
+  </div>
+  <div style="text-align:center;margin-top:35px;">
+    <a href="/blog" class="btn2">View All Posts</a>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

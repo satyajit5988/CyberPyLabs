@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Blog | CyberPy Labs{% endblock %}
+{% block content %}
+
+<section>
+  <h2 class="title">{{ heading }}</h2>
+
+  <div class="filter-row">
+    <a href="/blog" class="filter-pill {{ 'active' if not selected_category else '' }}">All</a>
+    {% for slug, label in categories %}
+    <a href="/blog?category={{ slug }}" class="filter-pill {{ 'active' if selected_category == slug else '' }}">{{ label }}</a>
+    {% endfor %}
+  </div>
+
+  {% if posts %}
+  <div class="post-list">
+    {% for post in posts %}
+    <a class="post-row" href="/post/{{ post.slug }}">
+      <div class="meta">
+        {{ category_labels.get(post.category, post.category) }}
+        <span class="post-date">{{ post.created_at.strftime('%b %d, %Y') }}</span>
+      </div>
+      <h3>{{ post.title }}</h3>
+      <p>{{ post.excerpt or '' }}</p>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>No posts here yet — check back soon.</p>
+  </div>
+  {% endif %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if post else 'New' }} Post | CyberPy Labs Admin{% endblock %}
+{% block content %}
+
+<section>
+  <h2 class="title" style="text-align:left;">{{ 'Edit Post' if post else 'New Post' }}</h2>
+
+  {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+
+  <form method="post" action="{{ '/admin/posts/' ~ post.id ~ '/edit' if post else '/admin/posts/new' }}">
+    <div class="form-card" style="max-width:none;margin-bottom:24px;">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required value="{{ post.title if post else '' }}">
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+          {% for slug, label in categories %}
+          <option value="{{ slug }}" {{ 'selected' if post and post.category == slug else '' }}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="excerpt">Excerpt <span style="text-transform:none;">(shown on listing pages, ~150 chars)</span></label>
+        <input type="text" id="excerpt" name="excerpt" maxlength="300" value="{{ post.excerpt if post else '' }}">
+      </div>
+
+      <div class="checkbox-row" style="margin-top:8px;">
+        <input type="checkbox" id="published" name="published" {{ 'checked' if not post or post.published else '' }}>
+        <label for="published" style="margin:0;text-transform:none;">Published (uncheck to save as draft)</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="content_md">Content (Markdown)</label>
+    </div>
+    <div class="editor-grid">
+      <div>
+        <div class="preview-label">Write</div>
+        <div class="editor-pane">
+          <textarea id="content_md" name="content_md" required>{{ post.content_md if post else '' }}</textarea>
+        </div>
+      </div>
+      <div>
+        <div class="preview-label">Preview</div>
+        <div class="editor-pane post-content" id="preview-pane"></div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn">{{ 'Save Changes' if post else 'Create Post' }}</button>
+      <a href="/admin/dashboard" class="btn2">Cancel</a>
+    </div>
+  </form>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script>
+  const textarea = document.getElementById('content_md');
+  const preview = document.getElementById('preview-pane');
+
+  function renderPreview() {
+    preview.innerHTML = marked.parse(textarea.value || '_Nothing to preview yet — start writing!_');
+  }
+  textarea.addEventListener('input', renderPreview);
+  renderPreview();
+</script>
+
+{% endblock %}

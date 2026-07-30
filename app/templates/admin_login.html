@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Admin Login | CyberPy Labs{% endblock %}
+{% block content %}
+
+<section>
+  <div class="login-wrap">
+    <h1>Admin Login</h1>
+    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+    <form class="form-card" method="post" action="/admin/login">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required autofocus>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn" style="width:100%;">Log In</button>
+    </form>
+  </div>
+</section>
+
+{% endblock %}
