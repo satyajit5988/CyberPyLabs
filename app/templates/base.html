@@ -20,6 +20,7 @@
     <a href="/contact" class="{{ 'active' if active_nav == 'contact' else '' }}">Contact Us</a>
     {% if admin %}
       <a href="/admin/dashboard" class="{{ 'active' if active_nav == 'admin' else '' }}">Dashboard</a>
+      <a href="/admin/messages" class="{{ 'active' if active_nav == 'messages' else '' }}">Messages{% if unread_message_count %} <span class="nav-badge">{{ unread_message_count }}</span>{% endif %}</a>
       <a href="/admin/logout">Logout</a>
     {% else %}
       <a href="/admin/login">Admin Login</a>

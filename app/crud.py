@@ -101,3 +101,27 @@ def add_contact_message(db: Session, name: str, email: str, subject: str, body: 
     db.commit()
     db.refresh(message)
     return message
+
+
+def list_contact_messages(db: Session):
+    return db.query(ContactMessage).order_by(ContactMessage.created_at.desc()).all()
+
+
+def count_unread_messages(db: Session) -> int:
+    return db.query(ContactMessage).filter(ContactMessage.is_read == False).count()  # noqa: E712
+
+
+def get_contact_message_by_id(db: Session, message_id: int):
+    return db.query(ContactMessage).filter(ContactMessage.id == message_id).first()
+
+
+def set_message_read(db: Session, message: ContactMessage, is_read: bool) -> ContactMessage:
+    message.is_read = is_read
+    db.commit()
+    db.refresh(message)
+    return message
+
+
+def delete_contact_message(db: Session, message: ContactMessage) -> None:
+    db.delete(message)
+    db.commit()

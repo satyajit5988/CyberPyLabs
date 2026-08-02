@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Messages | CyberPy Labs Admin{% endblock %}
+{% block content %}
+
+<section>
+  <div class="admin-topbar">
+    <h2 class="title" style="margin:0;text-align:left;">Messages</h2>
+  </div>
+
+  {% if messages %}
+  <div class="message-list">
+    {% for m in messages %}
+    <div class="message-card {{ 'unread' if not m.is_read else '' }}">
+      <div class="message-top">
+        <div class="message-from">
+          <strong>{{ m.name }}</strong>
+          <span>{{ m.email }}</span>
+        </div>
+        {% if not m.is_read %}
+          <span class="status-pill status-unread">Unread</span>
+        {% else %}
+          <span class="status-pill status-read">Read</span>
+        {% endif %}
+      </div>
+      {% if m.subject %}<div class="message-subject">{{ m.subject }}</div>{% endif %}
+      <div class="message-meta">{{ m.created_at.strftime('%b %d, %Y %I:%M %p') }} UTC</div>
+      <div class="message-body">{{ m.body }}</div>
+      <div class="row-actions">
+        <form method="post" action="/admin/messages/{{ m.id }}/read" style="display:inline;">
+          <button type="submit" class="delete-link" style="color:var(--cyan);">
+            {{ 'Mark unread' if m.is_read else 'Mark read' }}
+          </button>
+        </form>
+        <form method="post" action="/admin/messages/{{ m.id }}/delete" style="display:inline;"
+              onsubmit="return confirm('Delete this message? This cannot be undone.');">
+          <button type="submit" class="delete-link">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>No messages yet. Submissions from the <a href="/contact" style="color:var(--cyan);">Contact Us</a> form will show up here.</p>
+  </div>
+  {% endif %}
+</section>
+
+{% endblock %}

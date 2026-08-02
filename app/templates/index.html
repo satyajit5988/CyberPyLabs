@@ -30,7 +30,7 @@
   <h2 class="title">Explore Topics</h2>
   <div class="cards">
     {% for slug, label in categories %}
-    <a class="card" href="/blog?category={{ slug }}">
+    <a class="card" href="{{ '/learn/python' if slug == 'python' else '/blog?category=' + slug }}">
       <h3>{{ label }}</h3>
       <p>{{ category_descriptions.get(slug, '') }}</p>
     </a>

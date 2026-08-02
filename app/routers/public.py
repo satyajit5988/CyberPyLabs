@@ -50,6 +50,14 @@ def home(request: Request, db: Session = Depends(get_db)):
     ))
 
 
+@router.get("/learn/python")
+def learn_python(request: Request, db: Session = Depends(get_db)):
+    return templates.TemplateResponse("topic_python.html", ctx(
+        request, db,
+        active_nav="python",
+    ))
+
+
 @router.get("/blog")
 def blog_list(request: Request, category: str | None = None, db: Session = Depends(get_db)):
     posts = crud.list_published_posts(db, category=category)
