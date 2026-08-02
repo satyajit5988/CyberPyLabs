@@ -353,6 +353,36 @@ footer h3 { color: #fff; margin-bottom: 8px; }
 .login-wrap { max-width: 420px; margin: 80px auto; padding: 0 20px; }
 .login-wrap h1 { text-align: center; margin-bottom: 30px; font-size: 28px; }
 
+/* ---------- Contact page ---------- */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.info-block {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+.info-block strong { display: block; color: var(--cyan); margin-bottom: 6px; }
+.info-block p { color: var(--text-muted); font-size: 14px; }
+
+.faq { margin-top: 45px; max-width: 1100px; margin-left: auto; margin-right: auto; }
+.faq-item {
+  background: var(--bg-card);
+  padding: 18px 22px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+.faq-item strong { display: block; margin-bottom: 6px; color: #fff; }
+.faq-item p { color: var(--text-dim); font-size: 14px; }
+
 /* ---------- Admin dashboard ---------- */
 
 .admin-topbar {
@@ -419,4 +449,5 @@ footer h3 { color: #fff; margin-bottom: 8px; }
   section { padding: 45px 6%; }
   .editor-grid { grid-template-columns: 1fr; }
   .admin-table { display: block; overflow-x: auto; }
+  .contact-grid { grid-template-columns: 1fr; }
 }
