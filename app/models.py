@@ -57,6 +57,7 @@ class ContactMessage(Base):
     email = Column(String(200), nullable=False)
     subject = Column(String(200), nullable=True)
     body = Column(Text, nullable=False)
+    is_read = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=utcnow)
 
 

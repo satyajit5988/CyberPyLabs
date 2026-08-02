@@ -14,12 +14,14 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 def ctx(request: Request, db: Session, **extra):
+    admin_user = get_optional_admin(request, db)
     base = {
         "request": request,
-        "admin": get_optional_admin(request, db),
+        "admin": admin_user,
         "current_year": datetime.now(timezone.utc).year,
         "categories": CATEGORIES,
         "category_labels": CATEGORY_LABELS,
+        "unread_message_count": crud.count_unread_messages(db) if admin_user else 0,
     }
     base.update(extra)
     return base
@@ -61,6 +63,32 @@ def dashboard(request: Request, db: Session = Depends(get_db), admin=Depends(get
     return templates.TemplateResponse("admin_dashboard.html", ctx(
         request, db, active_nav="admin", posts=posts
     ))
+
+
+@router.get("/messages")
+def messages(request: Request, db: Session = Depends(get_db), admin=Depends(get_current_admin)):
+    msgs = crud.list_contact_messages(db)
+    return templates.TemplateResponse("admin_messages.html", ctx(
+        request, db, active_nav="messages", messages=msgs
+    ))
+
+
+@router.post("/messages/{message_id}/read")
+def mark_message_read(message_id: int, db: Session = Depends(get_db), admin=Depends(get_current_admin)):
+    message = crud.get_contact_message_by_id(db, message_id)
+    if not message:
+        raise HTTPException(status_code=404, detail="Message not found")
+    crud.set_message_read(db, message, not message.is_read)
+    return RedirectResponse(url="/admin/messages", status_code=303)
+
+
+@router.post("/messages/{message_id}/delete")
+def delete_message(message_id: int, db: Session = Depends(get_db), admin=Depends(get_current_admin)):
+    message = crud.get_contact_message_by_id(db, message_id)
+    if not message:
+        raise HTTPException(status_code=404, detail="Message not found")
+    crud.delete_contact_message(db, message)
+    return RedirectResponse(url="/admin/messages", status_code=303)
 
 
 @router.get("/posts/new")
