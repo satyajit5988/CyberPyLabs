@@ -71,11 +71,11 @@ nav a:hover, nav a.active { color: var(--cyan); }
 /* ---------- Hero (landing page) ---------- */
 
 .hero {
-  min-height: 380px;
+  min-height: 400px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 50px 10% 40px;
+  padding: 50px 10% 70px;
   background: linear-gradient(135deg, #08111f, #10223f);
 }
 .hero-text { max-width: 600px; }
@@ -123,7 +123,7 @@ nav a:hover, nav a.active { color: var(--cyan); }
   border-radius: 50%;
   background: radial-gradient(circle, #00E5FF22, #76FF0322, #08111f);
   display: flex;
-  transform: translate(-120px, 40px);
+  transform: translate(-120px, 0);
   justify-content: center;
   align-items: center;
   font-size: 110px;
@@ -382,7 +382,18 @@ footer h3 { color: #fff; margin-bottom: 8px; }
   color: var(--green-soft);
   font-weight: 600;
   margin-bottom: 10px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+.docs-sidebar summary::-webkit-details-marker { display: none; }
+.docs-sidebar summary::after {
+  content: "+";
+  font-size: 16px;
+  color: var(--text-muted);
+}
+.docs-sidebar details[open] summary::after { content: "\2212"; }
 .docs-sidebar ul { list-style: none; margin-top: 10px; }
 .docs-sidebar li { margin: 5px 0; }
 .docs-sidebar a {
