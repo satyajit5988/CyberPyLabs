@@ -78,6 +78,44 @@ def post_detail(slug: str, request: Request, db: Session = Depends(get_db)):
     ))
 
 
+@router.get("/contact")
+def contact(request: Request, db: Session = Depends(get_db)):
+    return templates.TemplateResponse("contact.html", ctx(
+        request, db,
+        active_nav="contact",
+        form_error=None,
+        form_values={},
+        sent=request.query_params.get("sent") == "1",
+    ))
+
+
+@router.post("/contact")
+def contact_submit(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+    subject: str = Form(""),
+    body: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    name = name.strip()
+    email = email.strip()
+    subject = subject.strip()
+    body = body.strip()
+
+    if not name or not email or not body:
+        return templates.TemplateResponse("contact.html", ctx(
+            request, db,
+            active_nav="contact",
+            form_error="Name, email and message are required.",
+            form_values={"name": name, "email": email, "subject": subject, "body": body},
+            sent=False,
+        ), status_code=400)
+
+    crud.add_contact_message(db, name[:120], email[:200], subject[:200], body[:4000])
+    return RedirectResponse(url="/contact?sent=1", status_code=303)
+
+
 @router.post("/post/{slug}/comments")
 def add_comment(
     slug: str,

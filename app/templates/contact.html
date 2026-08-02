@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Contact Us | CyberPy Labs{% endblock %}
+{% block content %}
+
+<section>
+  <h2 class="title">Contact Us</h2>
+  <p class="subtitle">Have a question, feedback, or collaboration idea? We'd love to hear from you.</p>
+
+  <div class="contact-grid">
+    <div class="form-card">
+      {% if sent %}
+        <div class="alert alert-success">Thanks — your message has been sent. We'll get back to you soon.</div>
+      {% endif %}
+      {% if form_error %}
+        <div class="alert alert-error">{{ form_error }}</div>
+      {% endif %}
+
+      <form method="post" action="/contact">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="name" placeholder="Enter your name" value="{{ form_values.get('name', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" placeholder="Enter your email" value="{{ form_values.get('email', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" name="subject" placeholder="Subject" value="{{ form_values.get('subject', '') }}">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea name="body" placeholder="Write your message..." required>{{ form_values.get('body', '') }}</textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn">Send Message</button>
+        </div>
+      </form>
+    </div>
+
+    <div>
+      <div class="info-block"><strong>📧 Email</strong><p>support@cyberpylabs.com</p></div>
+      <div class="info-block"><strong>🌐 Website</strong><p>www.cyberpylabs.com</p></div>
+      <div class="info-block"><strong>💻 GitHub</strong><p>github.com/cyberpylabs</p></div>
+      <div class="info-block"><strong>▶ YouTube</strong><p>CyberPy Labs</p></div>
+      <div class="info-block"><strong>💼 LinkedIn</strong><p>CyberPy Labs</p></div>
+    </div>
+  </div>
+
+  <div class="faq">
+    <h2 class="title">Frequently Asked Questions</h2>
+    <div class="faq-item"><strong>How can I enroll in a course?</strong><p>Choose a learning track and begin with the first module.</p></div>
+    <div class="faq-item"><strong>Are all tutorials free?</strong><p>Most tutorials are free, with premium content planned in the future.</p></div>
+    <div class="faq-item"><strong>Can I contribute?</strong><p>Yes. Reach out using the contact form.</p></div>
+    <div class="faq-item"><strong>How do I report a bug?</strong><p>Use this contact form or GitHub.</p></div>
+  </div>
+</section>
+
+{% endblock %}

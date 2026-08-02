@@ -2,7 +2,7 @@ import markdown as md
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 
-from .models import Post, Comment
+from .models import Post, Comment, ContactMessage
 from .auth import slugify
 
 MD_EXTENSIONS = ["fenced_code", "codehilite", "tables", "toc", "nl2br"]
@@ -93,3 +93,11 @@ def add_comment(db: Session, post: Post, author_name: str, body: str) -> Comment
     db.commit()
     db.refresh(comment)
     return comment
+
+
+def add_contact_message(db: Session, name: str, email: str, subject: str, body: str) -> ContactMessage:
+    message = ContactMessage(name=name, email=email, subject=subject, body=body)
+    db.add(message)
+    db.commit()
+    db.refresh(message)
+    return message

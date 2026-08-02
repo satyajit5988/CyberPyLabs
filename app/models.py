@@ -49,6 +49,17 @@ class Comment(Base):
     post = relationship("Post", back_populates="comments")
 
 
+class ContactMessage(Base):
+    __tablename__ = "contact_messages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(120), nullable=False)
+    email = Column(String(200), nullable=False)
+    subject = Column(String(200), nullable=True)
+    body = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=utcnow)
+
+
 # Fixed set of categories shown across the site — keeps nav/cards/admin dropdown in sync.
 CATEGORIES = [
     ("python", "🐍 Python"),

@@ -26,6 +26,18 @@
   </div>
 </section>
 
+<section>
+  <h2 class="title">Explore Topics</h2>
+  <div class="cards">
+    {% for slug, label in categories %}
+    <a class="card" href="/blog?category={{ slug }}">
+      <h3>{{ label }}</h3>
+      <p>{{ category_descriptions.get(slug, '') }}</p>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
 <section class="why-section">
   <h2 class="title">Why CyberPy Labs?</h2>
   <p class="subtitle" style="max-width:760px;margin-left:auto;margin-right:auto;">
@@ -39,18 +51,6 @@
     <div class="stat"><h2>Practical</h2><p>Every topic is explained using realistic coding examples instead of abstract theory.</p></div>
     <div class="stat"><h2>Technologies</h2><p>Explore Python, Cybersecurity, Networking, Docker, Kubernetes, DevOps, and AI in one place.</p></div>
     <div class="stat"><h2>Interview</h2><p>Prepare for technical interviews with curated questions, explanations, and coding exercises.</p></div>
-  </div>
-</section>
-
-<section>
-  <h2 class="title">Explore Topics</h2>
-  <div class="cards">
-    {% for slug, label in categories %}
-    <a class="card" href="/blog?category={{ slug }}">
-      <h3>{{ label }}</h3>
-      <p>{{ category_descriptions.get(slug, '') }}</p>
-    </a>
-    {% endfor %}
   </div>
 </section>
 
