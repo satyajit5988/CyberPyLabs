@@ -71,11 +71,11 @@ nav a:hover, nav a.active { color: var(--cyan); }
 /* ---------- Hero (landing page) ---------- */
 
 .hero {
-  min-height: 380px;
+  min-height: 400px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 50px 10% 40px;
+  padding: 50px 10% 70px;
   background: linear-gradient(135deg, #08111f, #10223f);
 }
 .hero-text { max-width: 600px; }
@@ -123,7 +123,7 @@ nav a:hover, nav a.active { color: var(--cyan); }
   border-radius: 50%;
   background: radial-gradient(circle, #00E5FF22, #76FF0322, #08111f);
   display: flex;
-  transform: translate(-120px, 40px);
+  transform: translate(-120px, 0);
   justify-content: center;
   align-items: center;
   font-size: 110px;
