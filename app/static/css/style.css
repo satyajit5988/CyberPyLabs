@@ -185,8 +185,20 @@ section { padding: 55px 10%; }
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 25px;
 }
-.stat { background: var(--bg-card); padding: 40px; text-align: center; border-radius: 15px; }
-.stat h2 { font-size: 45px; color: var(--green-soft); }
+.stat {
+  background: var(--bg-card);
+  padding: 40px 24px;
+  text-align: center;
+  border-radius: 15px;
+  min-width: 0;
+}
+.stat h2 {
+  font-size: clamp(26px, 5vw, 45px);
+  color: var(--green-soft);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.stat p { overflow-wrap: break-word; }
 
 footer { padding: 40px; text-align: center; background: var(--bg-footer); color: #888; }
 footer h3 { color: #fff; margin-bottom: 8px; }
