@@ -451,6 +451,7 @@ footer h3 { color: #fff; margin-bottom: 8px; }
   margin: 0 auto;
   align-items: start;
 }
+.contact-grid .form-card { max-width: none; margin: 0; width: 100%; }
 
 .info-block {
   background: var(--bg-card);
