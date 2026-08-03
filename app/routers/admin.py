@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 from fastapi import APIRouter, Request, Depends, Form, HTTPException
 from fastapi.responses import RedirectResponse
@@ -11,6 +12,12 @@ from ..auth import verify_password, get_current_admin, get_optional_admin
 
 router = APIRouter(prefix="/admin")
 templates = Jinja2Templates(directory="app/templates")
+
+try:
+    _ASSET_VERSION = str(int(os.path.getmtime("app/static/css/style.css")))
+except OSError:
+    _ASSET_VERSION = "1"
+templates.env.globals["asset_version"] = _ASSET_VERSION
 
 
 def ctx(request: Request, db: Session, **extra):

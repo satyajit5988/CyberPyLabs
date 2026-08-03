@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 from fastapi import APIRouter, Request, Depends, Form, HTTPException
 from fastapi.responses import RedirectResponse
@@ -11,6 +12,14 @@ from ..auth import get_optional_admin
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
+
+# Cache-busting version for /static assets, so a fresh deploy is never masked
+# by a browser (or CDN) holding onto a stale cached style.css.
+try:
+    _ASSET_VERSION = str(int(os.path.getmtime("app/static/css/style.css")))
+except OSError:
+    _ASSET_VERSION = "1"
+templates.env.globals["asset_version"] = _ASSET_VERSION
 
 CATEGORY_DESCRIPTIONS = {
     "python": "From beginner to advanced Python with automation, APIs and projects.",
