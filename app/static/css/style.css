@@ -396,8 +396,36 @@ footer h3 { color: #fff; margin-bottom: 8px; }
 .alert-error { background: rgba(255, 82, 82, .12); border: 1px solid rgba(255, 82, 82, .4); color: #ff8a8a; }
 .alert-success { background: rgba(118, 255, 3, .1); border: 1px solid rgba(118, 255, 3, .35); color: var(--green); }
 
-.login-wrap { max-width: 420px; margin: 80px auto; padding: 0 20px; }
-.login-wrap h1 { text-align: center; margin-bottom: 30px; font-size: 28px; }
+.login-wrap { max-width: 420px; margin: 70px auto 40px; padding: 0 20px; text-align: center; }
+.login-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, .35);
+  text-align: left;
+}
+.login-icon {
+  display: block;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 18px;
+  padding: 10px;
+  background: rgba(0, 229, 255, .1);
+  border-radius: 50%;
+  box-sizing: content-box;
+}
+.login-card h1 { text-align: center; font-size: 24px; margin-bottom: 6px; }
+.login-subtitle { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+.login-card .form-group:last-of-type { margin-bottom: 22px; }
+.login-back {
+  display: inline-block;
+  margin-top: 22px;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-decoration: none;
+}
+.login-back:hover { color: var(--cyan); }
 
 /* ---------- Topic / docs pages (e.g. /learn/python) ---------- */
 

@@ -1,22 +1,32 @@
 {% extends "base.html" %}
-{% block title %}Admin Login | CyberPy Labs{% endblock %}
+{% block title %}Login | CyberPy Labs{% endblock %}
 {% block content %}
 
 <section>
   <div class="login-wrap">
-    <h1>Admin Login</h1>
-    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
-    <form class="form-card" method="post" action="/admin/login">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required autofocus>
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-      </div>
-      <button type="submit" class="btn" style="width:100%;">Log In</button>
-    </form>
+    <div class="login-card">
+      <svg class="login-icon" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="4" y="10" width="16" height="10" rx="2"/>
+        <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+      </svg>
+      <h1>Admin Login</h1>
+      <p class="login-subtitle">Sign in to manage posts and messages.</p>
+
+      {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+
+      <form method="post" action="/admin/login">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required autofocus>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn" style="width:100%;">Log In</button>
+      </form>
+    </div>
+    <a href="/" class="login-back">← Back to home</a>
   </div>
 </section>
 

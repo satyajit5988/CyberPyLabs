@@ -23,7 +23,7 @@
       <a href="/admin/messages" class="{{ 'active' if active_nav == 'messages' else '' }}">Messages{% if unread_message_count %} <span class="nav-badge">{{ unread_message_count }}</span>{% endif %}</a>
       <a href="/admin/logout">Logout</a>
     {% else %}
-      <a href="/admin/login">Admin Login</a>
+      <a href="/admin/login">Login</a>
     {% endif %}
   </nav>
   <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="siteNav">
