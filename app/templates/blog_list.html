@@ -13,11 +13,11 @@
   </div>
 
   {% if posts %}
-  <div class="post-list">
+  <div class="post-grid">
     {% for post in posts %}
-    <a class="post-row" href="/post/{{ post.slug }}">
+    <a class="post-card" href="/post/{{ post.slug }}">
       <div class="meta">
-        {{ category_labels.get(post.category, post.category) }}
+        <span>{{ category_labels.get(post.category, post.category) }}</span>
         <span class="post-date">{{ post.created_at.strftime('%b %d, %Y') }}</span>
       </div>
       <h3>{{ post.title }}</h3>

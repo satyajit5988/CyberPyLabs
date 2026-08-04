@@ -276,6 +276,38 @@ footer h3 { color: #fff; margin-bottom: 8px; }
 .post-row p { color: var(--text-dim); font-size: 14px; }
 .post-date { color: var(--text-dim); font-size: 12px; margin-left: 10px; }
 
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 26px;
+}
+.post-card {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card);
+  border-radius: 14px;
+  padding: 26px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: .3s;
+}
+.post-card:hover { border-color: rgba(0, 229, 255, .35); transform: translateY(-4px); }
+.post-card .meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--green-soft);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 12px;
+}
+.post-card .meta .post-date { margin-left: 0; }
+.post-card h3 { font-size: 19px; line-height: 1.35; margin-bottom: 10px; }
+.post-card p { color: var(--text-dim); font-size: 14px; flex: 1; }
+
 .empty-state { text-align: center; padding: 60px 20px; color: var(--text-dim); }
 
 /* ---------- Single post ---------- */
