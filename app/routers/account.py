@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import CATEGORIES, CATEGORY_LABELS
+from ..models import CATEGORIES, CATEGORY_LABELS, AdminUser
 from .. import crud
 from ..auth import (
     hash_password,
@@ -98,6 +98,8 @@ def register_submit(
 
 @router.get("/login")
 def user_login_form(request: Request, db: Session = Depends(get_db)):
+    if request.session.get("admin_user_id"):
+        return RedirectResponse(url="/admin/dashboard", status_code=303)
     if request.session.get("user_id"):
         return RedirectResponse(url="/dashboard", status_code=303)
     return templates.TemplateResponse("user_login.html", ctx(
@@ -114,16 +116,25 @@ def user_login_submit(
     password: str = Form(...),
     db: Session = Depends(get_db),
 ):
-    user = crud.get_user_by_identifier(db, identifier)
-    if not user or not verify_password(password, user.password_hash):
-        return templates.TemplateResponse("user_login.html", ctx(
-            request, db,
-            active_nav="login",
-            error="Invalid email/mobile or password.",
-        ), status_code=400)
+    identifier = identifier.strip()
 
-    request.session["user_id"] = user.id
-    return RedirectResponse(url="/dashboard", status_code=303)
+    # Check admin accounts first (matched by username), then regular users
+    # (matched by email or mobile) - same form, same field, two account types.
+    admin = db.query(AdminUser).filter(AdminUser.username == identifier).first()
+    if admin and verify_password(password, admin.password_hash):
+        request.session["admin_user_id"] = admin.id
+        return RedirectResponse(url="/admin/dashboard", status_code=303)
+
+    user = crud.get_user_by_identifier(db, identifier)
+    if user and verify_password(password, user.password_hash):
+        request.session["user_id"] = user.id
+        return RedirectResponse(url="/dashboard", status_code=303)
+
+    return templates.TemplateResponse("user_login.html", ctx(
+        request, db,
+        active_nav="login",
+        error="Invalid username/email/mobile or password.",
+    ), status_code=401)
 
 
 @router.get("/logout")

@@ -6,9 +6,9 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import CATEGORIES, CATEGORY_LABELS, AdminUser
+from ..models import CATEGORIES, CATEGORY_LABELS
 from .. import crud
-from ..auth import verify_password, get_current_admin, get_optional_admin, get_optional_user
+from ..auth import get_current_admin, get_optional_admin, get_optional_user
 
 router = APIRouter(prefix="/admin")
 templates = Jinja2Templates(directory="app/templates")
@@ -36,27 +36,9 @@ def ctx(request: Request, db: Session, **extra):
 
 
 @router.get("/login")
-def login_form(request: Request, db: Session = Depends(get_db)):
-    if request.session.get("admin_user_id"):
-        return RedirectResponse(url="/admin/dashboard", status_code=303)
-    return templates.TemplateResponse("admin_login.html", ctx(request, db, active_nav="admin", error=None))
-
-
-@router.post("/login")
-def login_submit(
-    request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
-    db: Session = Depends(get_db),
-):
-    user = db.query(AdminUser).filter(AdminUser.username == username.strip()).first()
-    if not user or not verify_password(password, user.password_hash):
-        return templates.TemplateResponse("admin_login.html", ctx(
-            request, db, active_nav="admin", error="Invalid username or password."
-        ), status_code=401)
-
-    request.session["admin_user_id"] = user.id
-    return RedirectResponse(url="/admin/dashboard", status_code=303)
+def login_form(request: Request):
+    # Login is now unified at /login for both admin and regular users.
+    return RedirectResponse(url="/login", status_code=303)
 
 
 @router.get("/logout")
