@@ -104,6 +104,13 @@ nav a:hover, nav a.active { color: var(--cyan); }
   background: linear-gradient(135deg, #08111f, #10223f);
 }
 .hero-text { max-width: 600px; }
+.hero-btns { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+.hero-btns .btn,
+.hero-btns .btn2 {
+  width: 190px;
+  text-align: center;
+  margin: 0;
+}
 .hero h1 { font-size: 38px; margin-bottom: 12px; line-height: 1.2; }
 .hero h1 span { color: var(--cyan); }
 .hero p { font-size: 15px; color: var(--text-muted); margin-bottom: 22px; }
