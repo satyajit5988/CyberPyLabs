@@ -51,12 +51,10 @@ def ctx(request: Request, db: Session, **extra):
 
 @router.get("/")
 def home(request: Request, db: Session = Depends(get_db)):
-    latest = crud.list_published_posts(db, limit=5)
     categories_with_tracks = {slug for slug, _ in CATEGORIES if crud.category_has_track(db, slug)}
     return templates.TemplateResponse("index.html", ctx(
         request, db,
         active_nav="home",
-        latest_posts=latest,
         category_descriptions=CATEGORY_DESCRIPTIONS,
         categories_with_tracks=categories_with_tracks,
     ))

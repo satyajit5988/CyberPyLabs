@@ -278,8 +278,8 @@ footer h3 { color: #fff; margin-bottom: 8px; }
 
 .post-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 26px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
 }
 .post-card {
   background: var(--bg-card);
@@ -539,6 +539,7 @@ footer h3 { color: #fff; margin-bottom: 8px; }
   .docs-sidebar { position: static; max-height: none; }
   .docs-content { padding: 24px 20px; }
   .docs-content h1 { font-size: 26px; }
+  .post-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 
@@ -701,4 +702,8 @@ footer h3 { color: #fff; margin-bottom: 8px; }
   .editor-grid { grid-template-columns: 1fr; }
   .admin-table { display: block; overflow-x: auto; }
   .contact-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 700px) {
+  .post-grid { grid-template-columns: 1fr; }
 }

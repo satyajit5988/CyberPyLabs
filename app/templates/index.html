@@ -61,22 +61,4 @@
   </div>
 </section>
 
-{% if latest_posts %}
-<section>
-  <h2 class="title">Latest Posts</h2>
-  <div class="post-list">
-    {% for post in latest_posts %}
-    <a class="post-row" href="/post/{{ post.slug }}">
-      <div class="meta">{{ category_labels.get(post.category, post.category) }}</div>
-      <h3>{{ post.title }}</h3>
-      <p>{{ post.excerpt or '' }}</p>
-    </a>
-    {% endfor %}
-  </div>
-  <div style="text-align:center;margin-top:35px;">
-    <a href="/blog" class="btn2">View All Posts</a>
-  </div>
-</section>
-{% endif %}
-
 {% endblock %}
