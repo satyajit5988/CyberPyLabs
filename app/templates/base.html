@@ -13,7 +13,7 @@
 
 <header>
   <a href="/" class="logo">Cyber<span>Py</span> Labs</a>
-  <nav>
+  <nav id="siteNav">
     <a href="/" class="{{ 'active' if active_nav == 'home' else '' }}">Home</a>
     <a href="/blog" class="{{ 'active' if active_nav == 'blog' else '' }}">Blog</a>
     <a href="/blog?category=interview" class="{{ 'active' if active_nav == 'interview' else '' }}">Interview Prep</a>
@@ -26,6 +26,9 @@
       <a href="/admin/login">Admin Login</a>
     {% endif %}
   </nav>
+  <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="siteNav">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
 <main>
@@ -38,6 +41,34 @@
   <br>
   <p>&copy; {{ current_year }} CyberPy Labs. All Rights Reserved.</p>
 </footer>
+
+<script>
+(function () {
+  var toggle = document.getElementById('navToggle');
+  var nav = document.getElementById('siteNav');
+  if (!toggle || !nav) return;
+
+  function closeMenu() {
+    nav.classList.remove('open');
+    toggle.classList.remove('active');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  toggle.addEventListener('click', function () {
+    var isOpen = nav.classList.toggle('open');
+    toggle.classList.toggle('active', isOpen);
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  nav.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', closeMenu);
+  });
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 900) closeMenu();
+  });
+})();
+</script>
 
 </body>
 </html>

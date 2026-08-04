@@ -66,7 +66,30 @@ nav a {
 }
 nav a:hover, nav a.active { color: var(--cyan); }
 
-.nav-toggle { display: none; }
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 34px;
+  height: 34px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nav-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform .25s, opacity .25s;
+}
+.nav-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ---------- Hero (landing page) ---------- */
 
@@ -93,6 +116,7 @@ nav a:hover, nav a.active { color: var(--cyan); }
   font-weight: 600;
   text-decoration: none;
   margin-right: 20px;
+  margin-bottom: 14px;
   cursor: pointer;
   font-size: 15px;
   transition: .3s;
@@ -109,6 +133,7 @@ nav a:hover, nav a.active { color: var(--cyan); }
   background: transparent;
   cursor: pointer;
   font-size: 15px;
+  margin-bottom: 14px;
   transition: .3s;
 }
 .btn2:hover { background: var(--cyan); color: var(--bg); }
@@ -126,9 +151,9 @@ nav a:hover, nav a.active { color: var(--cyan); }
   transform: translate(-120px, 0);
   justify-content: center;
   align-items: center;
-  font-size: 110px;
   flex-shrink: 0;
 }
+.hero-shield { display: block; width: 42%; height: 42%; flex-shrink: 0; }
 
 .tech-badge {
   position: absolute;
@@ -568,10 +593,29 @@ footer h3 { color: #fff; margin-bottom: 8px; }
 
 @media (max-width: 900px) {
   .hero { flex-direction: column; text-align: center; justify-content: center; }
-  .hero-image { margin-top: 50px; width: 300px; height: 300px; font-size: 120px; transform: none; }
+  .hero-image { margin-top: 50px; width: 300px; height: 300px; transform: none; }
   .hero h1 { font-size: 32px; }
   header { padding: 18px 6%; }
-  nav { display: none; }
+  .nav-toggle { display: flex; }
+  nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: #0c1629;
+    border-bottom: 1px solid var(--border);
+    padding: 8px 6% 16px;
+  }
+  nav.open { display: flex; }
+  nav a {
+    margin-left: 0;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
+  }
   section { padding: 45px 6%; }
   .editor-grid { grid-template-columns: 1fr; }
   .admin-table { display: block; overflow-x: auto; }
