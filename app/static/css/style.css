@@ -182,7 +182,7 @@ nav a:hover, nav a.active { color: var(--cyan); }
 .b5 { bottom: -18px; left: 50%; transform: translateX(-50%); }
 .b6 { top: 50%; left: -95px; transform: translateY(-50%); z-index: 3; }
 .b7 { top: 50%; right: -95px; transform: translateY(-50%); }
-.b8 { top: -15px; right: 50px; bottom: auto; left: auto; transform: none; }
+.b8 { top: -15px; right: 75px; bottom: auto; left: auto; transform: none; }
 
 /* ---------- Generic sections ---------- */
 
