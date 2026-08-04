@@ -23,7 +23,7 @@
   --border: rgba(255, 255, 255, .08);
 }
 
-html { overflow-x: hidden; }
+html { overflow-x: hidden; overflow-y: scroll; scrollbar-gutter: stable; }
 body {
   background: var(--bg);
   color: #fff;
