@@ -100,7 +100,7 @@ nav a:hover, nav a.active { color: var(--cyan); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 50px 10% 70px;
+  padding: 50px 10% 55px;
   background: linear-gradient(135deg, #08111f, #10223f);
 }
 .hero-text { max-width: 600px; }
