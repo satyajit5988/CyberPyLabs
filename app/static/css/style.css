@@ -23,6 +23,7 @@
   --border: rgba(255, 255, 255, .08);
 }
 
+html { overflow-x: hidden; }
 body {
   background: var(--bg);
   color: #fff;
@@ -30,6 +31,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 main { flex: 1; }
@@ -409,6 +411,7 @@ footer h3 { color: #fff; margin-bottom: 8px; }
   top: 90px;
   max-height: calc(100vh - 110px);
   overflow: auto;
+  min-width: 0;
 }
 .docs-sidebar h2 { color: var(--cyan); margin-bottom: 20px; font-size: 20px; }
 .docs-sidebar summary {
@@ -444,10 +447,10 @@ footer h3 { color: #fff; margin-bottom: 8px; }
 .docs-sidebar a:hover { background: rgba(0, 229, 255, .13); }
 .docs-sidebar a.current { background: rgba(0, 229, 255, .13); color: var(--cyan); }
 
-.docs-content { background: var(--bg-card); padding: 40px; border-radius: 12px; }
+.docs-content { background: var(--bg-card); padding: 40px; border-radius: 12px; min-width: 0; }
 .docs-content h1 { font-size: 34px; margin-bottom: 18px; color: #fff; }
 
-.docs-aside { display: flex; flex-direction: column; gap: 20px; }
+.docs-aside { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
 .doc-card { background: var(--bg-card); padding: 20px; border-radius: 12px; }
 .doc-card h3 { color: var(--cyan); margin-bottom: 15px; font-size: 17px; }
 .doc-card input {
@@ -465,6 +468,8 @@ footer h3 { color: #fff; margin-bottom: 8px; }
 @media (max-width: 1100px) {
   .docs-page { grid-template-columns: 1fr; }
   .docs-sidebar { position: static; max-height: none; }
+  .docs-content { padding: 24px 20px; }
+  .docs-content h1 { font-size: 26px; }
 }
 
 
@@ -595,6 +600,12 @@ footer h3 { color: #fff; margin-bottom: 8px; }
   .hero { flex-direction: column; text-align: center; justify-content: center; }
   .hero-image { margin-top: 50px; width: 300px; height: 300px; transform: none; }
   .hero h1 { font-size: 32px; }
+  .b1 { top: 15px; left: -20px; }
+  .b2 { top: 10px; right: -20px; }
+  .b3 { bottom: 50px; left: -25px; }
+  .b4 { bottom: 20px; right: -20px; }
+  .b6 { left: -25px; }
+  .b7 { right: -20px; }
   header { padding: 18px 6%; }
   .nav-toggle { display: flex; }
   nav {
