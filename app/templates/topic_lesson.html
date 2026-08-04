@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} | CyberPy Labs{% endblock %}
+{% block description %}{{ post.excerpt or (category_labels.get(category, category) ~ ' tutorials on CyberPy Labs') }}{% endblock %}
+{% block content %}
+
+<section class="docs-page">
+
+  <aside class="docs-sidebar">
+    <h2>{{ category_labels.get(category, category) }}</h2>
+
+    {% for level_key, level_label in [('beginner', 'Beginner'), ('intermediate', 'Intermediate'), ('advanced', 'Advanced')] %}
+      {% if grouped_lessons.get(level_key) %}
+      <details {{ 'open' if level_key == post.track_level or loop.first else '' }}>
+        <summary>{{ level_label }}</summary>
+        <ul>
+          {% for lesson in grouped_lessons[level_key] %}
+          <li><a href="/learn/{{ category }}/{{ lesson.slug }}" class="{{ 'current' if lesson.id == post.id else '' }}">{{ lesson.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </details>
+      {% endif %}
+    {% endfor %}
+  </aside>
+
+  <main class="docs-content">
+    <div class="breadcrumb">
+      <a href="/" style="color:inherit;">Home</a> /
+      <a href="/learn/{{ category }}" style="color:inherit;">{{ category_labels.get(category, category) }}</a> /
+      {{ post.title }}
+    </div>
+
+    <h1>{{ post.title }}</h1>
+
+    <div class="post-content">
+      {{ post.content_html | safe }}
+    </div>
+  </main>
+
+  <aside class="docs-aside">
+    <div class="doc-card">
+      <h3>Search</h3>
+      <input type="text" placeholder="Search...">
+    </div>
+    <div class="doc-card">
+      <h3>{{ category_labels.get(category, category) }} Lessons</h3>
+      <ul>
+        {% for lesson in grouped_lessons.get('beginner', []) + grouped_lessons.get('intermediate', []) + grouped_lessons.get('advanced', []) %}
+        <li><a href="/learn/{{ category }}/{{ lesson.slug }}" style="color:inherit;text-decoration:none;">{{ lesson.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="doc-card">
+      <h3>Roadmap</h3>
+      <p style="color:var(--text-muted);font-size:14px;">Beginner → Intermediate → Advanced</p>
+    </div>
+  </aside>
+
+</section>
+
+{% endblock %}

@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import CATEGORIES, CATEGORY_LABELS
+from ..models import CATEGORIES, CATEGORY_LABELS, TRACK_LEVELS
 from .. import crud
 from ..auth import get_current_admin, get_optional_admin, get_optional_user
 
@@ -84,7 +84,7 @@ def delete_message(message_id: int, db: Session = Depends(get_db), admin=Depends
 @router.get("/posts/new")
 def new_post_form(request: Request, db: Session = Depends(get_db), admin=Depends(get_current_admin)):
     return templates.TemplateResponse("admin_post_form.html", ctx(
-        request, db, active_nav="admin", post=None, error=None
+        request, db, active_nav="admin", post=None, error=None, track_levels=TRACK_LEVELS
     ))
 
 
@@ -96,6 +96,8 @@ def new_post_submit(
     excerpt: str = Form(""),
     content_md: str = Form(...),
     published: bool = Form(False),
+    track_level: str = Form(""),
+    track_order: int = Form(0),
     db: Session = Depends(get_db),
     admin=Depends(get_current_admin),
 ):
@@ -103,10 +105,12 @@ def new_post_submit(
     content_md = content_md.strip()
     if not title or not content_md:
         return templates.TemplateResponse("admin_post_form.html", ctx(
-            request, db, active_nav="admin", post=None, error="Title and content are required."
+            request, db, active_nav="admin", post=None, error="Title and content are required.",
+            track_levels=TRACK_LEVELS,
         ), status_code=400)
 
-    post = crud.create_post(db, title, category, excerpt.strip(), content_md, published)
+    post = crud.create_post(db, title, category, excerpt.strip(), content_md, published,
+                             track_level=track_level.strip(), track_order=track_order)
     return RedirectResponse(url="/admin/dashboard", status_code=303)
 
 
@@ -116,7 +120,7 @@ def edit_post_form(post_id: int, request: Request, db: Session = Depends(get_db)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
     return templates.TemplateResponse("admin_post_form.html", ctx(
-        request, db, active_nav="admin", post=post, error=None
+        request, db, active_nav="admin", post=post, error=None, track_levels=TRACK_LEVELS
     ))
 
 
@@ -129,6 +133,8 @@ def edit_post_submit(
     excerpt: str = Form(""),
     content_md: str = Form(...),
     published: bool = Form(False),
+    track_level: str = Form(""),
+    track_order: int = Form(0),
     db: Session = Depends(get_db),
     admin=Depends(get_current_admin),
 ):
@@ -140,10 +146,12 @@ def edit_post_submit(
     content_md = content_md.strip()
     if not title or not content_md:
         return templates.TemplateResponse("admin_post_form.html", ctx(
-            request, db, active_nav="admin", post=post, error="Title and content are required."
+            request, db, active_nav="admin", post=post, error="Title and content are required.",
+            track_levels=TRACK_LEVELS,
         ), status_code=400)
 
-    crud.update_post(db, post, title, category, excerpt.strip(), content_md, published)
+    crud.update_post(db, post, title, category, excerpt.strip(), content_md, published,
+                      track_level=track_level.strip(), track_order=track_order)
     return RedirectResponse(url="/admin/dashboard", status_code=303)
 
 

@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import CATEGORIES, CATEGORY_LABELS
+from ..models import CATEGORIES, CATEGORY_LABELS, CATEGORY_SLUGS
 from .. import crud
 from ..auth import get_optional_admin, get_optional_user
 
@@ -52,19 +52,51 @@ def ctx(request: Request, db: Session, **extra):
 @router.get("/")
 def home(request: Request, db: Session = Depends(get_db)):
     latest = crud.list_published_posts(db, limit=5)
+    categories_with_tracks = {slug for slug, _ in CATEGORIES if crud.category_has_track(db, slug)}
     return templates.TemplateResponse("index.html", ctx(
         request, db,
         active_nav="home",
         latest_posts=latest,
         category_descriptions=CATEGORY_DESCRIPTIONS,
+        categories_with_tracks=categories_with_tracks,
     ))
 
 
-@router.get("/learn/python")
-def learn_python(request: Request, db: Session = Depends(get_db)):
-    return templates.TemplateResponse("topic_python.html", ctx(
+@router.get("/learn/{category}")
+def learn_category(category: str, db: Session = Depends(get_db)):
+    if category not in CATEGORY_SLUGS:
+        raise HTTPException(status_code=404, detail="Category not found")
+    lessons = crud.get_track_posts(db, category)
+    if not lessons:
+        # No lesson-track content for this category yet - fall back to the
+        # regular blog listing filtered to it, rather than a dead end.
+        return RedirectResponse(url=f"/blog?category={category}", status_code=303)
+    return RedirectResponse(url=f"/learn/{category}/{lessons[0].slug}", status_code=303)
+
+
+@router.get("/learn/{category}/{slug}")
+def learn_lesson(category: str, slug: str, request: Request, db: Session = Depends(get_db)):
+    if category not in CATEGORY_SLUGS:
+        raise HTTPException(status_code=404, detail="Category not found")
+    lessons = crud.get_track_posts(db, category)
+    post = next((p for p in lessons if p.slug == slug), None)
+    if not post:
+        raise HTTPException(status_code=404, detail="Lesson not found")
+
+    current_user = get_optional_user(request, db)
+    if current_user:
+        crud.set_last_visited_post(db, current_user, post)
+
+    grouped_lessons = {"beginner": [], "intermediate": [], "advanced": []}
+    for lesson in lessons:
+        grouped_lessons.setdefault(lesson.track_level, []).append(lesson)
+
+    return templates.TemplateResponse("topic_lesson.html", ctx(
         request, db,
-        active_nav="python",
+        active_nav=category,
+        category=category,
+        post=post,
+        grouped_lessons=grouped_lessons,
     ))
 
 

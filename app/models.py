@@ -42,6 +42,12 @@ class Post(Base):
     content_md = Column(Text, nullable=False)       # raw markdown, as authored
     content_html = Column(Text, nullable=False)      # rendered HTML, cached at save time
     published = Column(Boolean, default=True, nullable=False)
+    # Optional: marks this post as a lesson in a structured learning track
+    # (e.g. the /learn/python sidebar). NULL = a regular blog post, not
+    # part of any track. Set to 'beginner' / 'intermediate' / 'advanced'
+    # to have it appear grouped + ordered in that category's track sidebar.
+    track_level = Column(String(20), nullable=True, index=True)
+    track_order = Column(Integer, default=0, nullable=False)
     created_at = Column(DateTime, default=utcnow)
     updated_at = Column(DateTime, default=utcnow, onupdate=utcnow)
 
@@ -90,3 +96,9 @@ CATEGORIES = [
 ]
 CATEGORY_SLUGS = {slug for slug, _ in CATEGORIES}
 CATEGORY_LABELS = dict(CATEGORIES)
+
+TRACK_LEVELS = [
+    ("beginner", "Beginner"),
+    ("intermediate", "Intermediate"),
+    ("advanced", "Advanced"),
+]

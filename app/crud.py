@@ -52,7 +52,40 @@ def get_post_by_id(db: Session, post_id: int):
     return db.query(Post).filter(Post.id == post_id).first()
 
 
-def create_post(db: Session, title, category, excerpt, content_md, published) -> Post:
+_TRACK_LEVEL_ORDER = {"beginner": 0, "intermediate": 1, "advanced": 2}
+
+
+def get_track_posts(db: Session, category: str):
+    """
+    All published posts in a category that are part of a learning track
+    (track_level is set), ordered for sidebar display: level group first
+    (beginner -> intermediate -> advanced), then track_order within a level.
+    """
+    posts = (
+        db.query(Post)
+        .filter(Post.published.is_(True))
+        .filter(Post.category == category)
+        .filter(Post.track_level.isnot(None))
+        .order_by(Post.track_order)
+        .all()
+    )
+    posts.sort(key=lambda p: (_TRACK_LEVEL_ORDER.get(p.track_level, 99), p.track_order))
+    return posts
+
+
+def category_has_track(db: Session, category: str) -> bool:
+    return (
+        db.query(Post)
+        .filter(Post.published.is_(True))
+        .filter(Post.category == category)
+        .filter(Post.track_level.isnot(None))
+        .first()
+        is not None
+    )
+
+
+def create_post(db: Session, title, category, excerpt, content_md, published,
+                 track_level=None, track_order=0) -> Post:
     post = Post(
         title=title,
         slug=unique_slug(db, title),
@@ -61,6 +94,8 @@ def create_post(db: Session, title, category, excerpt, content_md, published) ->
         content_md=content_md,
         content_html=render_markdown(content_md),
         published=published,
+        track_level=track_level or None,
+        track_order=track_order or 0,
     )
     db.add(post)
     db.commit()
@@ -68,7 +103,8 @@ def create_post(db: Session, title, category, excerpt, content_md, published) ->
     return post
 
 
-def update_post(db: Session, post: Post, title, category, excerpt, content_md, published) -> Post:
+def update_post(db: Session, post: Post, title, category, excerpt, content_md, published,
+                 track_level=None, track_order=0) -> Post:
     if title != post.title:
         post.slug = unique_slug(db, title, ignore_post_id=post.id)
     post.title = title
@@ -77,6 +113,8 @@ def update_post(db: Session, post: Post, title, category, excerpt, content_md, p
     post.content_md = content_md
     post.content_html = render_markdown(content_md)
     post.published = published
+    post.track_level = track_level or None
+    post.track_order = track_order or 0
     db.commit()
     db.refresh(post)
     return post
