@@ -5,7 +5,7 @@ from fastapi import Request, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from .database import get_db
-from .models import AdminUser
+from .models import AdminUser, User
 
 
 def hash_password(plain: str) -> str:
@@ -53,3 +53,31 @@ def get_optional_admin(request: Request, db: Session = Depends(get_db)):
     if not user_id:
         return None
     return db.query(AdminUser).filter(AdminUser.id == user_id).first()
+
+
+def get_current_user(request: Request, db: Session = Depends(get_db)):
+    """
+    FastAPI dependency for protecting regular-user routes (e.g. /dashboard).
+    Uses a separate session key from admin, so the two logins never overlap.
+    """
+    user_id = request.session.get("user_id")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_303_SEE_OTHER,
+            headers={"Location": "/login"},
+        )
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_303_SEE_OTHER,
+            headers={"Location": "/login"},
+        )
+    return user
+
+
+def get_optional_user(request: Request, db: Session = Depends(get_db)):
+    """Non-raising version — used to show/hide user-only UI (nav, hero CTA)."""
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return None
+    return db.query(User).filter(User.id == user_id).first()

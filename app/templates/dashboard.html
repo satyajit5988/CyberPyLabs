@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard | CyberPy Labs{% endblock %}
+{% block content %}
+
+<section>
+  <h2 class="title">My Dashboard</h2>
+  <p class="subtitle">Welcome back, {{ user.name }}.</p>
+
+  <div style="max-width: 640px; margin: 0 auto;">
+    <h3 style="color: var(--cyan); margin-bottom: 18px;">Continue where you left off</h3>
+
+    {% if user.last_visited_post %}
+    <a class="post-row" href="/post/{{ user.last_visited_post.slug }}">
+      <div class="meta">{{ category_labels.get(user.last_visited_post.category, user.last_visited_post.category) }}</div>
+      <h3>{{ user.last_visited_post.title }}</h3>
+      <p>{{ user.last_visited_post.excerpt or '' }}</p>
+    </a>
+    {% else %}
+    <div class="empty-state">
+      <p>You haven't visited any posts yet. <a href="/blog" style="color: var(--cyan);">Browse the blog</a> to get started.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

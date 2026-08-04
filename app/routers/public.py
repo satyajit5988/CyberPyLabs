@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import CATEGORIES, CATEGORY_LABELS
 from .. import crud
-from ..auth import get_optional_admin
+from ..auth import get_optional_admin, get_optional_user
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
@@ -40,6 +40,7 @@ def ctx(request: Request, db: Session, **extra):
     base = {
         "request": request,
         "admin": get_optional_admin(request, db),
+        "user": get_optional_user(request, db),
         "current_year": datetime.now(timezone.utc).year,
         "categories": CATEGORIES,
         "category_labels": CATEGORY_LABELS,
@@ -86,6 +87,9 @@ def post_detail(slug: str, request: Request, db: Session = Depends(get_db)):
     post = crud.get_post_by_slug(db, slug)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
+    current_user = get_optional_user(request, db)
+    if current_user:
+        crud.set_last_visited_post(db, current_user, post)
     return templates.TemplateResponse("post_detail.html", ctx(
         request, db,
         active_nav="blog",

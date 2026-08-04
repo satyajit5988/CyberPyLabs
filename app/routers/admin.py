@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 from ..models import CATEGORIES, CATEGORY_LABELS, AdminUser
 from .. import crud
-from ..auth import verify_password, get_current_admin, get_optional_admin
+from ..auth import verify_password, get_current_admin, get_optional_admin, get_optional_user
 
 router = APIRouter(prefix="/admin")
 templates = Jinja2Templates(directory="app/templates")
@@ -25,6 +25,7 @@ def ctx(request: Request, db: Session, **extra):
     base = {
         "request": request,
         "admin": admin_user,
+        "user": get_optional_user(request, db),
         "current_year": datetime.now(timezone.utc).year,
         "categories": CATEGORIES,
         "category_labels": CATEGORY_LABELS,

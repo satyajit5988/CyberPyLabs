@@ -6,7 +6,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from .database import Base, engine, SessionLocal
 from .models import AdminUser
 from .auth import hash_password
-from .routers import public, admin
+from .routers import public, admin, account
 
 app = FastAPI(title="CyberPy Labs")
 
@@ -19,6 +19,7 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(public.router)
 app.include_router(admin.router)
+app.include_router(account.router)
 
 
 @app.on_event("startup")

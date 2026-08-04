@@ -2,7 +2,7 @@ import markdown as md
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 
-from .models import Post, Comment, ContactMessage
+from .models import Post, Comment, ContactMessage, User
 from .auth import slugify
 
 MD_EXTENSIONS = ["fenced_code", "codehilite", "tables", "toc", "nl2br"]
@@ -124,4 +124,27 @@ def set_message_read(db: Session, message: ContactMessage, is_read: bool) -> Con
 
 def delete_contact_message(db: Session, message: ContactMessage) -> None:
     db.delete(message)
+    db.commit()
+
+
+def get_user_by_identifier(db: Session, identifier: str):
+    """Look up a user by email (case-insensitive) or mobile number."""
+    identifier = identifier.strip()
+    return db.query(User).filter(
+        (User.email == identifier.lower()) | (User.mobile == identifier)
+    ).first()
+
+
+def create_user(db: Session, name: str, email: str | None, mobile: str | None, password_hash: str) -> User:
+    user = User(name=name, email=email or None, mobile=mobile or None, password_hash=password_hash)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+def set_last_visited_post(db: Session, user: User, post: Post) -> None:
+    if user.last_visited_post_id == post.id:
+        return
+    user.last_visited_post_id = post.id
     db.commit()

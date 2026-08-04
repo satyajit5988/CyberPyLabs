@@ -11,7 +11,9 @@
     </p>
     <div class="hero-btns">
       <a href="/blog" class="btn">Start Learning</a>
-      {% if not admin %}<a href="/admin/login" class="btn2">Register / Login</a>{% endif %}
+      {% if admin %}
+      {% elif user %}<a href="/dashboard" class="btn2">My Dashboard</a>
+      {% else %}<a href="/register" class="btn2">Register / Login</a>{% endif %}
     </div>
   </div>
 

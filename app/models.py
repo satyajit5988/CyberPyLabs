@@ -8,6 +8,20 @@ def utcnow():
     return datetime.now(timezone.utc)
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(120), nullable=False)
+    email = Column(String(200), unique=True, nullable=True, index=True)
+    mobile = Column(String(20), unique=True, nullable=True, index=True)
+    password_hash = Column(String(255), nullable=False)
+    last_visited_post_id = Column(Integer, ForeignKey("posts.id"), nullable=True)
+    created_at = Column(DateTime, default=utcnow)
+
+    last_visited_post = relationship("Post")
+
+
 class AdminUser(Base):
     __tablename__ = "admin_users"
 

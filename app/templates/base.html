@@ -22,8 +22,11 @@
       <a href="/admin/dashboard" class="{{ 'active' if active_nav == 'admin' else '' }}">Dashboard</a>
       <a href="/admin/messages" class="{{ 'active' if active_nav == 'messages' else '' }}">Messages{% if unread_message_count %} <span class="nav-badge">{{ unread_message_count }}</span>{% endif %}</a>
       <a href="/admin/logout">Logout</a>
+    {% elif user %}
+      <a href="/dashboard" class="{{ 'active' if active_nav == 'dashboard' else '' }}">My Dashboard</a>
+      <a href="/logout">Logout</a>
     {% else %}
-      <a href="/admin/login">Login</a>
+      <a href="/login" class="{{ 'active' if active_nav == 'login' else '' }}">Login</a>
     {% endif %}
   </nav>
   <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="siteNav">
