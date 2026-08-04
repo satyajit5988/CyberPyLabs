@@ -95,28 +95,91 @@ local Python/venv setup entirely — Render's free tier works well for this.
   Postgres instance and set the `DATABASE_URL` env var it gives you —
   the app already reads that automatically, no code changes needed.
 
-## Before deploying (for real, longer-term use)
+## Self-hosted deployment (DigitalOcean + your own domain + auto-deploy)
 
-1. **Set a real session secret.** Set the `SESSION_SECRET` environment
-   variable to a long random string (the code falls back to an insecure
-   dev value otherwise):
-   ```bash
-   export SESSION_SECRET="$(python3 -c 'import secrets; print(secrets.token_hex(32))')"
-   ```
-2. **Move off SQLite if you expect concurrent writers** — set the
-   `DATABASE_URL` environment variable to a Postgres connection string.
-   No code changes needed.
-3. **Serve over HTTPS** in production so session cookies aren't sent in
-   plaintext, and consider setting `same_site="strict"` in
-   `app/main.py` if you don't need cross-site cookie behavior.
-4. **Run with a production ASGI setup**, e.g.:
-   ```bash
-   uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
-   ```
-   (or behind Gunicorn with `uvicorn.workers.UvicornWorker`, fronted by
-   Nginx/Caddy for TLS).
-5. Common low-cost hosts that work well for this: Render, Railway,
-   Fly.io, or a small VPS with a systemd service + Caddy for TLS.
+Everything needed for this lives in `deploy/` and `.github/workflows/deploy.yml`.
+One-time setup, then every `git push` to `main` redeploys automatically.
+
+### 1. Create the server
+
+- Sign up at [digitalocean.com](https://digitalocean.com), create a Droplet:
+  Ubuntu 24.04, Basic plan, $6/mo (1GB RAM) is enough for this app.
+- Note the Droplet's IP address.
+
+### 2. Run the one-time setup script
+
+SSH in as root and run the setup script — it installs Python, PostgreSQL,
+Nginx, Certbot, clones this repo, and starts the app:
+
+```bash
+ssh root@YOUR_SERVER_IP
+curl -O https://raw.githubusercontent.com/satyajit5988/CyberPyLabs/main/deploy/setup-server.sh
+chmod +x setup-server.sh
+./setup-server.sh
+```
+
+It'll prompt for your repo URL, domain name, and admin username/password.
+Database credentials and the session secret are generated randomly for you.
+At the end it prints your server's IP and the DNS records to add next.
+
+### 3. Point your domain at the server
+
+At your registrar (GoDaddy or similar), add:
+- An **A record** for `@` (root domain) → your server's IP
+- An **A record** for `www` → your server's IP
+
+DNS propagation can take a few minutes to a few hours.
+
+### 4. Get HTTPS
+
+Once DNS resolves to your server:
+
+```bash
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+```
+
+Free, auto-renewing certificate from Let's Encrypt. Your site is now live at
+`https://yourdomain.com`.
+
+### 5. Set up auto-deploy on push
+
+Generate a dedicated SSH key pair for GitHub Actions to use (don't reuse your
+personal key):
+
+```bash
+ssh-keygen -t ed25519 -f deploy_key -N "" -C "github-actions-deploy"
+```
+
+Add the **public** key (`deploy_key.pub`) to the server:
+
+```bash
+ssh-copy-id -i deploy_key.pub root@YOUR_SERVER_IP
+```
+
+In your GitHub repo → **Settings → Secrets and variables → Actions**, add:
+
+| Secret name | Value |
+|---|---|
+| `SERVER_HOST` | Your server's IP address |
+| `SERVER_USER` | `root` |
+| `SERVER_SSH_KEY` | The **private** key content (`cat deploy_key`) |
+
+That's it — every push to `main` now runs `deploy/deploy.sh` on the server
+(pulls latest code, installs any new dependencies, restarts the app). You
+can also trigger a redeploy manually from the repo's **Actions** tab without
+pushing anything.
+
+### Managing the live app
+
+```bash
+ssh root@YOUR_SERVER_IP
+systemctl status cyberpylabs      # is it running?
+journalctl -u cyberpylabs -f      # live logs
+systemctl restart cyberpylabs     # manual restart
+```
+
+Secrets (`DATABASE_URL`, `SESSION_SECRET`, admin credentials) live in
+`/etc/cyberpylabs.env` on the server, root-only readable, never in git.
 
 ## Notes on comments
 

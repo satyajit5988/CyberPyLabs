@@ -1,0 +1,30 @@
+# systemd service for CyberPy Labs (FastAPI app)
+#
+# Installed on the server at /etc/systemd/system/cyberpylabs.service
+# by setup-server.sh. Secrets (DATABASE_URL, SESSION_SECRET, admin
+# credentials) live in /etc/cyberpylabs.env, NOT in this file or git -
+# that file is created once during server setup and is root-only
+# readable (chmod 600).
+
+[Unit]
+Description=CyberPy Labs (FastAPI)
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=cyberpylabs
+Group=cyberpylabs
+WorkingDirectory=/opt/cyberpylabs
+EnvironmentFile=/etc/cyberpylabs.env
+ExecStart=/opt/cyberpylabs/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --workers 2
+Restart=always
+RestartSec=3
+
+# Basic hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/cyberpylabs
+
+[Install]
+WantedBy=multi-user.target
